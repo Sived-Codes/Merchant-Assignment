@@ -7,17 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.prashant.merchantassignment.R
-import com.prashant.merchantassignment.model.UsersModel
-import com.prashant.merchantassignment.view.UserListFragment
+import com.prashant.merchantassignment.model.UserModel
 
 class UserAdapter(
     private val context: Context,
-    private var userList: List<UsersModel>,
+    private var userList: List<UserModel>,
     private var navController: NavController?
 ) :
     RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
@@ -49,15 +47,12 @@ class UserAdapter(
         holder.itemView.setOnClickListener{
             val bundle = Bundle()
             bundle.putString("id", user.id.toString())
-            Toast.makeText(context, user.id.toString()+ "", Toast.LENGTH_SHORT).show()
             navController?.navigate(R.id.action_userListFragment_to_userDetailFragment, bundle)
 
         }
     }
 
-//    fun UpdateUserList(newData : List<UsersModel>){
-//
-//    }
+
 
     override fun getItemCount(): Int {
       return  userList.size

@@ -1,9 +1,8 @@
 package com.prashant.merchantassignment.network
 
 import com.prashant.merchantassignment.model.ResponseModel
-import com.prashant.merchantassignment.model.UsersModel
+import com.prashant.merchantassignment.model.UserModel
 import retrofit2.http.GET
-import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface ApiService {
@@ -12,6 +11,6 @@ interface ApiService {
     suspend fun getUsers() : ResponseModel
 
     @GET("users/{id}")
-    suspend fun getUserById(@Path("id") id : Int) : UsersModel
+    suspend fun getUserById(@Path("id") id : Int) : UserModel
 
 }

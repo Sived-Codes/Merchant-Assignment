@@ -5,17 +5,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.prashant.merchantassignment.model.UsersModel
+import com.prashant.merchantassignment.model.UserModel
 import kotlinx.coroutines.launch
 
 class UserViewModel: ViewModel() {
     private val repository = UserRepository()
-    private  val getUsers = MutableLiveData<List<UsersModel>>()
-    val list: LiveData<List<UsersModel>> get() = getUsers
+    private  val getUsers = MutableLiveData<List<UserModel>>()
+    val list: LiveData<List<UserModel>> get() = getUsers
 
-    val specific: LiveData<UsersModel> get() = specificUser
+    val specific: LiveData<UserModel> get() = specificUser
 
-    private val specificUser = MutableLiveData<UsersModel>()
+    private val specificUser = MutableLiveData<UserModel>()
 
     init {
         getUsers()
@@ -30,14 +30,16 @@ class UserViewModel: ViewModel() {
         }
     }
 
-    fun getSpecificUser(id : Int){
+    fun getSpecificUser(id: Int) {
         viewModelScope.launch {
             try {
-                specificUser.value = repository.getUserById(id)
-            }catch (e: Exception){
-                Log.d("ViewModelError", "getUsers: " +e.toString()  )
+                val user = repository.getUserById(id)
+                specificUser.value = user
+            } catch (e: Exception) {
+                Log.d("ViewModelError", "getSpecificUser: ${e.message}")
             }
         }
     }
+
 
 }

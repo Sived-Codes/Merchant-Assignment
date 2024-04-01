@@ -5,57 +5,63 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import coil.load
 import com.prashant.merchantassignment.R
 import com.prashant.merchantassignment.databinding.FragmentUserDetailBinding
-import com.prashant.merchantassignment.databinding.FragmentUserListBinding
 import com.prashant.merchantassignment.viewmodel.UserViewModel
-
 
 class UserDetailFragment : Fragment() {
 
-    private lateinit var bind: FragmentUserDetailBinding
-    private lateinit var userViewModel: UserViewModel
+    private lateinit var binding: FragmentUserDetailBinding
+    private val userViewModel: UserViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-        bind = FragmentUserDetailBinding.inflate(inflater, container, false)
-        val navController = activity?.findNavController(R.id.navHost)
-        val id = arguments?.getString("id")
-
-        getData()
-
-        bind.editBtn.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putString("id", id!!)
-            navController!!.navigate(R.id.action_userDetailFragment_to_userEditFragment, bundle)
-        }
-
-        return bind.root
+        binding = FragmentUserDetailBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    private fun getData() {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
-
-
-        userViewModel.specific.observe(viewLifecycleOwner) { user ->
-
-            bind.userName.text = user.firstName + " " +user.lastName
-            bind.userEmail.text = user.email
-            bind.userMobile.text = user.phone
-
-            bind.userImage.load(user.image) {
-                crossfade(true)
-                placeholder(R.drawable.icn_user)
-            }
+        val userId = arguments?.getInt("id") ?: -1
+        if (userId == -1) {
+            return
         }
 
+        setupViews()
+        userViewModel.getSpecificUser(userId)
+        observeUserData()
+    }
 
+    private fun setupViews() {
+        binding.editBtn.setOnClickListener {
+            val userId = arguments?.getInt("id") ?: -1
+            if (userId != -1) {
+                val bundle = Bundle().apply {
+                    putInt("id", userId)
+                }
+                findNavController().navigate(R.id.action_userDetailFragment_to_userEditFragment, bundle)
+            }
+        }
+    }
+
+    private fun observeUserData() {
+        userViewModel.specific.observe(viewLifecycleOwner) { user ->
+            binding.apply {
+                userName.text = "${user.firstName} ${user.lastName}"
+                userEmail.text = user.email
+                userMobile.text = user.phone
+
+                userImage.load(user.image) {
+                    crossfade(true)
+                    placeholder(R.drawable.icn_user)
+                }
+            }
+        }
     }
 }

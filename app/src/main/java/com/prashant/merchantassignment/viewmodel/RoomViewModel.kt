@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.prashant.merchantassignment.room.entity.UserRoomModel
+import com.prashant.merchantassignment.model.UserModel
 import com.prashant.merchantassignment.room.repository.UserRoomRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -14,9 +14,9 @@ import kotlinx.coroutines.withContext
 
 class RoomViewModel (private val repository: UserRoomRepository) : ViewModel() {
 
-    val allItems: LiveData<List<UserRoomModel>> = repository.getAllUser().asLiveData()
+    val allItems: LiveData<List<UserModel>> = repository.getAllUser().asLiveData()
 
-    fun insert(dbItem: UserRoomModel) = viewModelScope.launch {
+    fun insert(dbItem: UserModel) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
             repository.addUser(dbItem)
         }

@@ -3,7 +3,7 @@ package com.prashant.merchantassignment.room.dao
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import com.prashant.merchantassignment.room.entity.UserRoomModel
+import com.prashant.merchantassignment.model.UserModel
 import kotlinx.coroutines.flow.Flow
 
 
@@ -11,10 +11,10 @@ import kotlinx.coroutines.flow.Flow
 interface UserDao {
 
     @Query("SELECT * FROM users " )
-    fun getAll(): Flow<List<UserRoomModel>>
+    fun getAll(): Flow<List<UserModel>>
 
     @Insert
-    fun insertAll(vararg movieItems: UserRoomModel)
+    fun insertAll(vararg movieItems: UserModel)
 
     @Query("DELETE FROM users WHERE id IN (:ids)")
     fun delete(ids: List<Int>)

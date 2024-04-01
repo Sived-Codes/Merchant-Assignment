@@ -21,8 +21,9 @@ class UserEditFragment : Fragment() {
     private lateinit var bind: FragmentUserEditBinding
     private lateinit var userViewModel: UserViewModel
 
-    private val viewModel : RoomViewModel by activityViewModels()
-
+    private val roomViewModel: RoomViewModel by viewModels {
+        UserViewModelFactory((requireActivity().application as MyApplication).userRepository)
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -34,6 +35,8 @@ class UserEditFragment : Fragment() {
     }
 
     private fun setupUi() {
+
+
         bind.updateBtn.setOnClickListener {
 
         }
