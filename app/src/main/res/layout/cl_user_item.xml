@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="@dimen/_14sdp">
+
+    <ImageView
+        android:id="@+id/userImage"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_40sdp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="@dimen/_20sdp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Parshant Deshmukh" />
+
+        <TextView
+            android:id="@+id/userEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Parshant Deshmukh" />
+
+        <TextView
+            android:id="@+id/userMobile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Parshant Deshmukh" />
+    </LinearLayout>
+
+
+</LinearLayout>

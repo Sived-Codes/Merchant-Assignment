@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    tools:context=".view.UserDetailFragment">
+
+    <RelativeLayout
+        android:id="@+id/actionBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_10sdp">
+
+        <ImageView
+            android:id="@+id/backBtn"
+            android:layout_width="@dimen/_24sdp"
+            android:layout_height="@dimen/_24sdp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/icn_back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Detail"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_16sdp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/editBtn"
+            android:layout_width="@dimen/_24sdp"
+            android:layout_height="@dimen/_24sdp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/icn_edit" />
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/actionBar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/_10sdp">
+
+                <ImageView
+                    android:layout_gravity="center_vertical"
+                    android:id="@+id/userImage"
+                    android:src="@drawable/icn_user"
+                    android:layout_width="@dimen/_60sdp"
+                    android:layout_height="@dimen/_60sdp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="@dimen/_20sdp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/userName"
+                        android:textColor="@color/white"
+
+                        android:textSize="@dimen/_14sdp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Parshant Deshmukh" />
+
+                    <TextView
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_14sdp"
+                        android:id="@+id/userEmail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Parshant Deshmukh" />
+
+                    <TextView
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_14sdp"
+                        android:id="@+id/userMobile"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Parshant Deshmukh" />
+                </LinearLayout>
+
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>
