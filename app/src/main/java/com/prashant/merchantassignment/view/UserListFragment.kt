@@ -1,6 +1,5 @@
 package com.prashant.merchantassignment.view
 
-import com.prashant.merchantassignment.viewmodel.UserViewModel
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +9,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,27 +19,27 @@ import com.prashant.merchantassignment.core.MyApplication
 import com.prashant.merchantassignment.databinding.FragmentUserListBinding
 import com.prashant.merchantassignment.model.UserModel
 import com.prashant.merchantassignment.viewmodel.RoomViewModel
+import com.prashant.merchantassignment.viewmodel.UserViewModel
 import com.prashant.merchantassignment.viewmodel.UserViewModelFactory
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.random.Random
-
 
 class UserListFragment : Fragment() {
 
     private lateinit var bind: FragmentUserListBinding
-
     private lateinit var adapter: UserAdapter
-    private lateinit var userViewModel: UserViewModel
 
+    private val userViewModel: UserViewModel by viewModels()
     private val roomViewModel: RoomViewModel by viewModels {
         UserViewModelFactory((requireActivity().application as MyApplication).userRepository)
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         bind = FragmentUserListBinding.inflate(inflater, container, false)
-
-
+        setupRecyclerView()
         bind.addBtn.setOnClickListener {
             showAddDialog()
         }
@@ -50,11 +48,45 @@ class UserListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        setupRecyclerView()
-        fetchUserOnline()
         fetchUserOffline()
+    }
 
+    private fun setupRecyclerView() {
+        val navController = activity?.findNavController(R.id.navHost)
+        bind.userRecyclerview.layoutManager = LinearLayoutManager(requireContext())
+        adapter = UserAdapter(roomViewModel, emptyList(), navController)
+        bind.userRecyclerview.adapter = adapter
+    }
+
+    private fun fetchUserOffline() {
+        roomViewModel.allItems.observe(viewLifecycleOwner) { offlineUserList ->
+            adapter.updateUserList(offlineUserList)
+            fetchUserOnline()
+
+            bind.pd.visibility = View.GONE
+        }
+    }
+
+    private fun fetchUserOnline() {
+        userViewModel.fetchUsers(roomViewModel)
+
+        userViewModel.list.observe(viewLifecycleOwner) { userList ->
+            lifecycleScope.launch {
+                try {
+                    for (user in userList) {
+
+                        if (!roomViewModel.isUserExist(user.id)){
+                            roomViewModel.insert(user)
+
+                        }
+                    }
+                }catch (_: Exception){}
+            }
+
+
+
+
+        }
     }
 
     private fun showAddDialog() {
@@ -79,7 +111,14 @@ class UserListFragment : Fragment() {
                 Toast.makeText(requireContext(), "Fill All Details!", Toast.LENGTH_LONG).show()
             } else {
                 lifecycleScope.launch {
-                    val model = UserModel(Random.nextInt(100, 10000), fNameT, lNameT, emailT, mobileT, "https://robohash.org/Terry.png?set=set4")
+                    val model = UserModel(
+                        Random.nextInt(100, 10000),
+                        fNameT,
+                        lNameT,
+                        emailT,
+                        mobileT,
+                        "https://robohash.org/Terry.png?set=set4"
+                    )
                     roomViewModel.insert(model)
                     Toast.makeText(requireContext(), "Added $fNameT", Toast.LENGTH_LONG).show()
                     dialog.dismiss()
@@ -89,40 +128,4 @@ class UserListFragment : Fragment() {
 
         dialog.show()
     }
-
-
-
-    private fun fetchUserOnline() {
-        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
-        userViewModel.fetchUsers(roomViewModel);
-
-    }
-
-
-    private fun fetchUserOffline() {
-
-        roomViewModel.allItems.observe(viewLifecycleOwner) { roomList ->
-
-            if(roomList.isEmpty()){
-                userViewModel.list.observe(viewLifecycleOwner) { userList ->
-                    adapter.updateUserList(userList)
-                }
-            }else{
-                adapter.updateUserList(roomList)
-
-            }
-
-        }
-        bind.pd.visibility =View.GONE
-
-
-    }
-
-    private fun setupRecyclerView() {
-        val navController = activity?.findNavController(R.id.navHost)
-        bind.userRecyclerview.layoutManager = LinearLayoutManager(requireContext())
-        adapter = UserAdapter(roomViewModel, emptyList(), navController)
-        bind.userRecyclerview.adapter = adapter
-    }
-
 }
