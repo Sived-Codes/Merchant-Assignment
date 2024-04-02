@@ -1,6 +1,5 @@
 package com.prashant.merchantassignment.apdater
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,19 +11,20 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.prashant.merchantassignment.R
 import com.prashant.merchantassignment.model.UserModel
+import com.prashant.merchantassignment.viewmodel.RoomViewModel
 
 class UserAdapter(
-    private val context: Context,
+    private var roomViewModel: RoomViewModel,
     private var userList: List<UserModel>,
     private var navController: NavController?
-) :
-    RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
+) : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
     class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val userName: TextView = itemView.findViewById(R.id.userName)
         val userEmail: TextView = itemView.findViewById(R.id.userEmail)
         val userMobile: TextView = itemView.findViewById(R.id.userMobile)
         val userImage: ImageView = itemView.findViewById(R.id.userImage)
+        val deleteBtn: ImageView = itemView.findViewById(R.id.deleteBtn)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
@@ -36,25 +36,34 @@ class UserAdapter(
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         val user = userList[position]
 
-        holder.userName.text = user.firstName + " " +user.lastName
+        holder.userName.text = user.firstName + " " + user.lastName
         holder.userEmail.text = user.email
         holder.userMobile.text = user.phone
 
-       holder.userImage.load(user.image) {
+        holder.deleteBtn.setOnClickListener {
+            roomViewModel.delete(user.id)
+            notifyItemRemoved(position)
+
+        }
+        holder.userImage.load(user.image) {
             crossfade(true)
             placeholder(R.drawable.icn_user)
         }
-        holder.itemView.setOnClickListener{
+        holder.itemView.setOnClickListener {
             val bundle = Bundle()
-            bundle.putString("id", user.id.toString())
+            bundle.putInt("id", user.id)
             navController?.navigate(R.id.action_userListFragment_to_userDetailFragment, bundle)
 
         }
     }
 
+    fun updateUserList(userList: List<UserModel>) {
+        this.userList = userList
+        notifyDataSetChanged()
+    }
 
 
     override fun getItemCount(): Int {
-      return  userList.size
+        return userList.size
     }
 }

@@ -5,13 +5,46 @@
     android:layout_height="match_parent"
     tools:context=".view.UserListFragment">
 
+    <RelativeLayout
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:id="@+id/action_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:layout_marginBottom="@dimen/_10sdp">
+
+        <TextView
+            android:id="@+id/deviceName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_4sdp"
+            android:fontFamily="@font/semibold_font"
+            android:text="All Users"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_14sdp" />
+
+        <ImageView
+            android:id="@+id/addBtn"
+            android:layout_marginEnd="@dimen/_4sdp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_width="@dimen/_20sdp"
+            android:layout_height="@dimen/_20sdp"
+            android:src="@drawable/icn_add"/>
+
+
+
+    </RelativeLayout>
+
     <androidx.recyclerview.widget.RecyclerView
+        android:layout_below="@id/action_bar"
         android:id="@+id/userRecyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
     <ProgressBar
         android:id="@+id/pd"
+        android:indeterminateTint="@color/primary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true" />

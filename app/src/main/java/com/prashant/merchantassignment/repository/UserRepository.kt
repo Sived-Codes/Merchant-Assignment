@@ -1,4 +1,4 @@
-package com.prashant.merchantassignment.viewmodel
+package com.prashant.merchantassignment.repository
 
 import com.prashant.merchantassignment.model.UserModel
 import com.prashant.merchantassignment.network.RetrofitClient

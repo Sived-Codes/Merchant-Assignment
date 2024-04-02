@@ -10,14 +10,19 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface UserDao {
 
-    @Query("SELECT * FROM users " )
+    @Query("SELECT * FROM users")
     fun getAll(): Flow<List<UserModel>>
+
+    @Query("SELECT * FROM users WHERE id = :userId")
+    fun getUserById(userId: Int): Flow<UserModel?>
 
     @Insert
     fun insertAll(vararg movieItems: UserModel)
 
-    @Query("DELETE FROM users WHERE id IN (:ids)")
-    fun delete(ids: List<Int>)
+    @Query("DELETE FROM users WHERE id = :userId")
+    suspend fun deleteUserById(userId: Int)
 
+    @Query("UPDATE users SET firstName = :firstName, lastName = :lastName, email = :email, phone = :mobile WHERE id = :userId")
+    suspend fun updateUser(userId: Int, firstName: String, lastName: String, email: String, mobile: String)
 
 }

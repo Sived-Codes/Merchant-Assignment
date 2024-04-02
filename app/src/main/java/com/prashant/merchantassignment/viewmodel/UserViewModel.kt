@@ -6,40 +6,43 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.prashant.merchantassignment.model.UserModel
+import com.prashant.merchantassignment.repository.UserRepository
 import kotlinx.coroutines.launch
 
-class UserViewModel: ViewModel() {
+class UserViewModel : ViewModel() {
     private val repository = UserRepository()
-    private  val getUsers = MutableLiveData<List<UserModel>>()
-    val list: LiveData<List<UserModel>> get() = getUsers
 
-    val specific: LiveData<UserModel> get() = specificUser
+    private val _users = MutableLiveData<List<UserModel>>()
+    val list: LiveData<List<UserModel>> get() = _users
 
-    private val specificUser = MutableLiveData<UserModel>()
 
-    init {
-        getUsers()
-    }
-    fun getUsers(){
+    private val _userDetails = MutableLiveData<UserModel>()
+    val userDetails: LiveData<UserModel> get() = _userDetails
+
+    fun fetchUsers(roomViewModel: RoomViewModel) {
         viewModelScope.launch {
             try {
-                getUsers.value = repository.getUsers()
-            }catch (e: Exception){
-                Log.d("ViewModelError", "getUsers: " +e.toString()  )
-            }
-        }
-    }
+                val userList = repository.getUsers()
 
-    fun getSpecificUser(id: Int) {
-        viewModelScope.launch {
-            try {
-                val user = repository.getUserById(id)
-                specificUser.value = user
+                _users.value = userList
+                for (user in userList) {
+                    roomViewModel.insert(user)
+                }
+                Log.d("UserViewModel", "All users saved locally")
             } catch (e: Exception) {
-                Log.d("ViewModelError", "getSpecificUser: ${e.message}")
+                Log.e("UserViewModel", "fetchUsers: ${e.message}")
             }
         }
     }
 
-
+    fun fetchUserById(userId: Int) {
+        viewModelScope.launch {
+            try {
+                val user = repository.getUserById(userId)
+                _userDetails.value = user
+            } catch (e: Exception) {
+                Log.e("ViewModel", "fetchUserById: ${e.message}")
+            }
+        }
+    }
 }

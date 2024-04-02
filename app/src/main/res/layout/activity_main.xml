@@ -1,13 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.fragment.app.FragmentContainerView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_centerInParent="true"
-    android:id="@+id/navHost"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:defaultNavHost="true"
-    android:name="androidx.navigation.fragment.NavHostFragment"
-    app:navGraph="@navigation/nav_graph"
-    tools:context=".view.MainActivity"/>
+    android:layout_height="match_parent">
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/navHost"
+        android:layout_above="@id/networkStatus"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/nav_graph"
+        tools:context=".view.MainActivity" />
+
+    <TextView
+        android:gravity="center"
+        android:paddingVertical="@dimen/_6sdp"
+        android:fontFamily="@font/semibold_font"
+        android:textSize="@dimen/_10sdp"
+        android:id="@+id/networkStatus"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

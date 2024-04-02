@@ -14,9 +14,18 @@ class UserLocalSource(private val userDao: UserDao) {
         userDao.insertAll(user)
     }
 
-
-
-    fun delete(movieId: List<Int>) {
-        userDao.delete(movieId)
+    suspend fun delete(id: Int) {
+        userDao.deleteUserById(id)
+    }
+    fun getUserById(userId: Int): Flow<UserModel?> {
+        return userDao.getUserById(userId)
+    }
+    suspend fun updateUser(userId: Int, firstName: String, lastName: String, email: String, mobile: String): Boolean {
+        val user = userDao.getUserById(userId)
+        if (user != null) {
+            userDao.updateUser(userId, firstName, lastName, email, mobile)
+            return true
+        }
+        return false
     }
 }

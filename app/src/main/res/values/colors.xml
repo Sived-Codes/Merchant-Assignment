@@ -2,5 +2,17 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="primary">#F44336</color>
+
+    <color name="background">#141218</color>
+    <color name="cardView">#334E4E61</color>
+    <color name="grey50">#666680</color>
+    <color name="grey40">#83839C</color>
+    <color name="grey70">#4E4E61</color>
+    <color name="primary">#FF7966</color>
+    <color name="secondaryButtonColor">#1AFFFFFF</color>
+
+    <color name="green">#259725</color>
+    <color name="red">#C10E0E</color>
+
+
 </resources>

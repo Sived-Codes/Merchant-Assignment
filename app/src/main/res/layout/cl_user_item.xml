@@ -1,40 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="@dimen/_14sdp">
-
-    <ImageView
-        android:id="@+id/userImage"
-        android:layout_width="@dimen/_40sdp"
-        android:layout_height="@dimen/_40sdp" />
+    android:layout_marginHorizontal="@dimen/_10sdp"
+    android:layout_marginTop="@dimen/_10sdp"
+    android:backgroundTint="@color/cardView">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginStart="@dimen/_20sdp"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/_10sdp"
+        android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/userName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Parshant Deshmukh" />
+        <ImageView
+            android:id="@+id/userImage"
+            android:layout_gravity="center"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
+            android:src="@drawable/icn_user" />
 
-        <TextView
-            android:id="@+id/userEmail"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="Parshant Deshmukh" />
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/userMobile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Parshant Deshmukh" />
+            <TextView
+                android:id="@+id/userName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:fontFamily="@font/semibold_font"
+                android:textSize="@dimen/_12sdp"/>
+
+            <TextView
+                android:id="@+id/userEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/regular_font"
+                android:textSize="@dimen/_12sdp"/>
+
+            <TextView
+                android:id="@+id/userMobile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/regular_font"
+                android:textSize="@dimen/_12sdp"/>
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/deleteBtn"
+            android:layout_gravity="center"
+            android:layout_width="@dimen/_20sdp"
+            android:layout_height="@dimen/_20sdp"
+            android:src="@drawable/icn_delete" />
     </LinearLayout>
 
-
-</LinearLayout>
+</com.google.android.material.card.MaterialCardView>
