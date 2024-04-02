@@ -18,6 +18,9 @@ class UserRoomRepository(private val localSource: UserLocalSource) {
         return localSource.getUserById(userId)
     }
 
+    suspend fun isUserExists(userId: Int): Boolean {
+        return localSource.isUserExist(userId)
+    }
    suspend fun delete(id: Int) {
         localSource.delete(id)
     }

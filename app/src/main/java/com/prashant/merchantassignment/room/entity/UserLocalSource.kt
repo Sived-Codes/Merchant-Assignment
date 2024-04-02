@@ -17,6 +17,11 @@ class UserLocalSource(private val userDao: UserDao) {
     suspend fun delete(id: Int) {
         userDao.deleteUserById(id)
     }
+
+    suspend fun isUserExist(userId: Int): Boolean {
+        val user = userDao.getUserById(userId)
+        return user != null
+    }
     fun getUserById(userId: Int): Flow<UserModel?> {
         return userDao.getUserById(userId)
     }

@@ -1,6 +1,7 @@
 package com.prashant.merchantassignment.viewmodel
 
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -23,17 +24,19 @@ class UserViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val userList = repository.getUsers()
-
                 _users.value = userList
-                for (newUser in userList) {
 
-                    val localUser = roomViewModel.getUserById(newUser.id)
+                try {
+                    for (user in userList) {
 
-                    if (localUser == null) {
-                        roomViewModel.insert(localUser)
+                        if (!roomViewModel.isUserExist(user.id)){
+                            roomViewModel.insert(user)
 
+                        }
                     }
-                }
+                }catch (_: Exception){}
+
+
                 Log.d("UserViewModel", "All users saved locally")
             } catch (e: Exception) {
                 Log.e("UserViewModel", "fetchUsers: ${e.message}")

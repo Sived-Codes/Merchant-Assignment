@@ -16,8 +16,6 @@ class RoomViewModel(private val repository: UserRoomRepository) : ViewModel() {
     val allItems: LiveData<List<UserModel>> = repository.getAllUser().asLiveData()
 
     fun insert(dbItem: UserModel) = viewModelScope.launch {
-        val existingUser = repository.getUserById(dbItem.id)
-
         withContext(Dispatchers.IO) {
             repository.addUser(dbItem)
         }
@@ -31,6 +29,10 @@ class RoomViewModel(private val repository: UserRoomRepository) : ViewModel() {
 
     fun getUserById(userId: Int): LiveData<UserModel?> {
         return repository.getUserById(userId).asLiveData()
+    }
+
+    suspend fun isUserExist(userId: Int): Boolean {
+        return repository.isUserExists(userId)
     }
 
     suspend fun updateUser(userId: Int, firstName: String, lastName: String, email: String, mobile: String): Boolean {
