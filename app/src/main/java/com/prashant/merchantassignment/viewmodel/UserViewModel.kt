@@ -25,8 +25,14 @@ class UserViewModel : ViewModel() {
                 val userList = repository.getUsers()
 
                 _users.value = userList
-                for (user in userList) {
-                    roomViewModel.insert(user)
+                for (newUser in userList) {
+
+                    val localUser = roomViewModel.getUserById(newUser.id)
+
+                    if (localUser == null) {
+                        roomViewModel.insert(localUser)
+
+                    }
                 }
                 Log.d("UserViewModel", "All users saved locally")
             } catch (e: Exception) {

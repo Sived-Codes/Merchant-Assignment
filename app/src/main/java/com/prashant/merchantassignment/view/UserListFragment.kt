@@ -42,14 +42,19 @@ class UserListFragment : Fragment() {
         bind = FragmentUserListBinding.inflate(inflater, container, false)
 
 
-        setupRecyclerView()
-        fetchUserOnline()
-        fetchUserOffline()
-
         bind.addBtn.setOnClickListener {
             showAddDialog()
         }
         return bind.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setupRecyclerView()
+        fetchUserOnline()
+        fetchUserOffline()
+
     }
 
     private fun showAddDialog() {
@@ -96,19 +101,19 @@ class UserListFragment : Fragment() {
 
     private fun fetchUserOffline() {
 
-        roomViewModel.allItems.observe(viewLifecycleOwner) { userList ->
+        roomViewModel.allItems.observe(viewLifecycleOwner) { roomList ->
 
-            if(userList.isEmpty()){
-                Toast.makeText(requireContext(), "Please fetch data online first ! ", Toast.LENGTH_SHORT).show()
+            if(roomList.isEmpty()){
                 userViewModel.list.observe(viewLifecycleOwner) { userList ->
                     adapter.updateUserList(userList)
                 }
             }else{
-                adapter.updateUserList(userList)
+                adapter.updateUserList(roomList)
 
             }
 
         }
+        bind.pd.visibility =View.GONE
 
 
     }
@@ -118,7 +123,6 @@ class UserListFragment : Fragment() {
         bind.userRecyclerview.layoutManager = LinearLayoutManager(requireContext())
         adapter = UserAdapter(roomViewModel, emptyList(), navController)
         bind.userRecyclerview.adapter = adapter
-        bind.pd.visibility =View.GONE
     }
 
 }

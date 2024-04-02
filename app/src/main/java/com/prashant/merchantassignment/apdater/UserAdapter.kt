@@ -42,7 +42,6 @@ class UserAdapter(
 
         holder.deleteBtn.setOnClickListener {
             roomViewModel.delete(user.id)
-            notifyItemRemoved(position)
 
         }
         holder.userImage.load(user.image) {

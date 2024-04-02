@@ -17,14 +17,9 @@ class RoomViewModel(private val repository: UserRoomRepository) : ViewModel() {
 
     fun insert(dbItem: UserModel) = viewModelScope.launch {
         val existingUser = repository.getUserById(dbItem.id)
-        if (existingUser == null) {
-            Log.d("RoomViewModel", "Inserting user with ID ${dbItem.id} into the database")
-            withContext(Dispatchers.IO) {
-                repository.addUser(dbItem)
-            }
-            Log.d("RoomViewModel", "User with ID ${dbItem.id} inserted into the database")
-        } else {
-            Log.d("RoomViewModel", "User with ID ${dbItem.id} already exists in the database. Skipping insertion.")
+
+        withContext(Dispatchers.IO) {
+            repository.addUser(dbItem)
         }
     }
 
