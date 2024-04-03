@@ -25,20 +25,9 @@ class UserViewModel : ViewModel() {
             try {
                 val userList = repository.getUsers()
                 _users.value = userList
-
-                try {
-                    for (user in userList) {
-
-                        if (!roomViewModel.isUserExist(user.id)){
-                            roomViewModel.insert(user)
-
-                        }
-                    }
-                }catch (_: Exception){}
-
-
                 Log.d("UserViewModel", "All users saved locally")
             } catch (e: Exception) {
+                _users.value = roomViewModel.allItems.value
                 Log.e("UserViewModel", "fetchUsers: ${e.message}")
             }
         }

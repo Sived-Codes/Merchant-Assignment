@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,7 +22,6 @@ import com.prashant.merchantassignment.model.UserModel
 import com.prashant.merchantassignment.viewmodel.RoomViewModel
 import com.prashant.merchantassignment.viewmodel.UserViewModel
 import com.prashant.merchantassignment.viewmodel.UserViewModelFactory
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
@@ -39,31 +39,36 @@ class UserListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         bind = FragmentUserListBinding.inflate(inflater, container, false)
-        setupRecyclerView()
+
+
+        val navController = activity?.findNavController(R.id.navHost)
+        bind.userRecyclerview.layoutManager = LinearLayoutManager(requireContext())
+        adapter = UserAdapter(roomViewModel, emptyList(), navController)
+        bind.userRecyclerview.adapter = adapter
+
+
+
+        fetchUserOnline()
+        fetchUserOffline()
+
+
         bind.addBtn.setOnClickListener {
             showAddDialog()
         }
         return bind.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        fetchUserOffline()
-    }
 
-    private fun setupRecyclerView() {
-        val navController = activity?.findNavController(R.id.navHost)
-        bind.userRecyclerview.layoutManager = LinearLayoutManager(requireContext())
-        adapter = UserAdapter(roomViewModel, emptyList(), navController)
-        bind.userRecyclerview.adapter = adapter
-    }
 
     private fun fetchUserOffline() {
-        roomViewModel.allItems.observe(viewLifecycleOwner) { offlineUserList ->
-            adapter.updateUserList(offlineUserList)
-            fetchUserOnline()
-
+        roomViewModel.allItems.observe(requireActivity()) { userList ->
             bind.pd.visibility = View.GONE
+            if (userList.isEmpty()) {
+                bind.noUserFound.visibility = View.VISIBLE
+            } else {
+                bind.noUserFound.visibility = View.GONE
+                adapter.updateUserList(userList)
+            }
         }
     }
 
@@ -74,18 +79,26 @@ class UserListFragment : Fragment() {
             lifecycleScope.launch {
                 try {
                     for (user in userList) {
-
-                        if (!roomViewModel.isUserExist(user.id)){
-                            roomViewModel.insert(user)
-
-                        }
+                        roomViewModel.getUserById(user.id)
+                            .observe(viewLifecycleOwner) { localUser ->
+                                localUser?.let {
+                                    if (user.id != localUser.id) {
+                                        val userModel = UserModel(
+                                            user.id,
+                                            user.firstName,
+                                            user.lastName,
+                                            user.email,
+                                            user.phone,
+                                            user.image
+                                        )
+                                        roomViewModel.insert(userModel)
+                                    }
+                                }
+                            }
                     }
-                }catch (_: Exception){}
+                } catch (_: Exception) {
+                }
             }
-
-
-
-
         }
     }
 
