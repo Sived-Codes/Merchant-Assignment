@@ -14,7 +14,7 @@ interface UserDao {
     fun getAll(): Flow<List<UserModel>>
 
     @Query("SELECT * FROM users WHERE id = :userId")
-    fun getUserById(userId: Int): Flow<UserModel?>
+    fun getUserById(userId: Int): UserModel?
 
     @Insert
     fun insertAll(vararg movieItems: UserModel)

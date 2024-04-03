@@ -27,8 +27,8 @@ class RoomViewModel(private val repository: UserRoomRepository) : ViewModel() {
         }
     }
 
-    fun getUserById(userId: Int): LiveData<UserModel?> {
-        return repository.getUserById(userId).asLiveData()
+    fun getUserById(userId: Int): UserModel? {
+        return repository.getUserById(userId)
     }
 
     suspend fun isUserExist(userId: Int): Boolean {

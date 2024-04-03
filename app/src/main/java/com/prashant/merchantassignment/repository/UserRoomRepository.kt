@@ -14,7 +14,7 @@ class UserRoomRepository(private val localSource: UserLocalSource) {
         localSource.add(user)
     }
 
-    fun getUserById(userId: Int): Flow<UserModel?> {
+    fun getUserById(userId: Int): UserModel? {
         return localSource.getUserById(userId)
     }
 

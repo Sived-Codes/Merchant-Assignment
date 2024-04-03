@@ -1,11 +1,9 @@
 package com.prashant.merchantassignment.view
 
-import NetworkReceiver
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -47,28 +45,12 @@ class UserDetailFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        observeUserDetails()
+        getUser()
         setupViews()
     }
 
-    private fun observeUserDetails() {
-        if (!NetworkReceiver.isOnline(requireContext())) {
-            getUserOffline()
-        } else {
-            getUserOnline()
-        }
-    }
-
-    private fun getUserOffline() {
-        roomViewModel.getUserById(userId).observe(viewLifecycleOwner) { user ->
-            user?.let {
-                bindUserData(it)
-            }
-        }
-    }
-
-    private fun getUserOnline() {
-        userViewModel.fetchUserById(userId)
+    private fun getUser() {
+        userViewModel.fetchUserById(userId, roomViewModel)
         userViewModel.userDetails.observe(viewLifecycleOwner) { user ->
             user?.let {
                 bindUserData(it)

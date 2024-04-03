@@ -22,7 +22,7 @@ class UserLocalSource(private val userDao: UserDao) {
         val user = userDao.getUserById(userId)
         return user != null
     }
-    fun getUserById(userId: Int): Flow<UserModel?> {
+    fun getUserById(userId: Int): UserModel? {
         return userDao.getUserById(userId)
     }
     suspend fun updateUser(userId: Int, firstName: String, lastName: String, email: String, mobile: String): Boolean {

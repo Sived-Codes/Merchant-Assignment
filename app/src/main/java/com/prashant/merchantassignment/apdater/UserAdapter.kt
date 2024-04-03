@@ -61,6 +61,10 @@ class UserAdapter(
         notifyDataSetChanged()
     }
 
+    fun getUserList(): List<UserModel> {
+        return userList
+    }
+
 
     override fun getItemCount(): Int {
         return userList.size

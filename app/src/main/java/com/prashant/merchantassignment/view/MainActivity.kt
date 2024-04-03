@@ -60,15 +60,25 @@ class MainActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        unregisterReceiver(mNetworkReceiver)
-        unregisterReceiver(networkStatusReceiver)
+        try {
+
+            unregisterReceiver(mNetworkReceiver)
+            unregisterReceiver(networkStatusReceiver)
+        } catch (e:Exception){}
+
     }
 
     override fun onResume() {
         super.onResume()
-        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
-        registerReceiver(mNetworkReceiver, filter)
-        val statusFilter = IntentFilter(NetworkReceiver.ACTION_NETWORK_STATUS)
-        registerReceiver(networkStatusReceiver, statusFilter)
+        try {
+            val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+            registerReceiver(mNetworkReceiver, filter)
+            val statusFilter = IntentFilter(NetworkReceiver.ACTION_NETWORK_STATUS)
+            registerReceiver(networkStatusReceiver, statusFilter)
+        } catch (e:Exception){}
+
+
     }
+
+
 }

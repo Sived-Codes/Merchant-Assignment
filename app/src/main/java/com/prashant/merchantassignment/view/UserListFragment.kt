@@ -1,6 +1,7 @@
 package com.prashant.merchantassignment.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +10,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,8 +22,11 @@ import com.prashant.merchantassignment.model.UserModel
 import com.prashant.merchantassignment.viewmodel.RoomViewModel
 import com.prashant.merchantassignment.viewmodel.UserViewModel
 import com.prashant.merchantassignment.viewmodel.UserViewModelFactory
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.random.Random
+
 
 class UserListFragment : Fragment() {
 
@@ -40,65 +43,42 @@ class UserListFragment : Fragment() {
     ): View {
         bind = FragmentUserListBinding.inflate(inflater, container, false)
 
-
         val navController = activity?.findNavController(R.id.navHost)
         bind.userRecyclerview.layoutManager = LinearLayoutManager(requireContext())
         adapter = UserAdapter(roomViewModel, emptyList(), navController)
         bind.userRecyclerview.adapter = adapter
 
-
-
         fetchUserOnline()
         fetchUserOffline()
-
 
         bind.addBtn.setOnClickListener {
             showAddDialog()
         }
+
+        bind.refreshBtn.setOnClickListener {
+            fetchUserOnline()
+        }
+
         return bind.root
     }
 
-
-
     private fun fetchUserOffline() {
-        roomViewModel.allItems.observe(requireActivity()) { userList ->
-            bind.pd.visibility = View.GONE
+        roomViewModel.allItems.observe(viewLifecycleOwner) { userList ->
             if (userList.isEmpty()) {
                 bind.noUserFound.visibility = View.VISIBLE
             } else {
                 bind.noUserFound.visibility = View.GONE
                 adapter.updateUserList(userList)
             }
+            bind.pd.visibility = View.GONE
+
         }
     }
 
     private fun fetchUserOnline() {
-        userViewModel.fetchUsers(roomViewModel)
-
+        userViewModel.fetchUsers()
         userViewModel.list.observe(viewLifecycleOwner) { userList ->
-            lifecycleScope.launch {
-                try {
-                    for (user in userList) {
-                        roomViewModel.getUserById(user.id)
-                            .observe(viewLifecycleOwner) { localUser ->
-                                localUser?.let {
-                                    if (user.id != localUser.id) {
-                                        val userModel = UserModel(
-                                            user.id,
-                                            user.firstName,
-                                            user.lastName,
-                                            user.email,
-                                            user.phone,
-                                            user.image
-                                        )
-                                        roomViewModel.insert(userModel)
-                                    }
-                                }
-                            }
-                    }
-                } catch (_: Exception) {
-                }
-            }
+            saveUser(userList)
         }
     }
 
@@ -141,4 +121,25 @@ class UserListFragment : Fragment() {
 
         dialog.show()
     }
+
+
+    private fun saveUser(userList: List<UserModel>) {
+        bind.pd.visibility = View.VISIBLE
+
+        lifecycleScope.launch {
+            var insertedUserCount = 0
+            for (user in userList) {
+                withContext(Dispatchers.IO) {
+                    val existingUser = roomViewModel.getUserById(user.id)
+                    if (existingUser == null) {
+                        roomViewModel.insert(user)
+                        insertedUserCount++
+                    }
+                }
+            }
+            bind.pd.visibility = View.GONE
+
+        }
+    }
+
 }
